@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Заметки</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="./styles/notes_extra_styles.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app" class="container mt-4">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Заметки</h2>
+
+          <!-- Форма для добавления заметки -->
+          <form @submit.prevent="addNote">
+            <div class="mb-3">
+              <label for="noteTitle" class="form-label">Заголовок заметки:</label>
+              <input
+                v-model="newNote.title"
+                type="text"
+                class="form-control"
+                id="noteTitle"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="noteDescription" class="form-label"
+                >Подробное описание:</label
+              >
+              <textarea
+                v-model="newNote.description"
+                class="form-control"
+                id="noteDescription"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="priority" class="form-label">Приоритет:</label>
+              <select
+                v-model="newNote.priority"
+                class="form-select"
+                id="priority"
+                required
+              >
+                <option value="low">Низкий</option>
+                <option value="medium">Средний</option>
+                <option value="high">Высокий</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-check-label"
+                >Критически важная:
+                <input
+                  v-model="newNote.isImportant"
+                  type="checkbox"
+                  class="form-check-input"
+                />
+              </label>
+            </div>
+            <div class="mb-3">
+              <label for="status" class="form-label">Статус:</label>
+              <div>
+                <label class="form-check-label">
+                  <input
+                    v-model="newNote.status"
+                    type="radio"
+                    class="form-check-input"
+                    value="Принять к сведению"
+                  />
+                  Принять к сведению
+                </label>
+                <label class="form-check-label">
+                  <input
+                    v-model="newNote.status"
+                    type="radio"
+                    class="form-check-input"
+                    value="Сделать"
+                  />
+                  Сделать
+                </label>
+                <label class="form-check-label">
+                  <input
+                    v-model="newNote.status"
+                    type="radio"
+                    class="form-check-input"
+                    value="Сделать позже"
+                  />
+                  Сделать позже
+                </label>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Добавить заметку
+            </button>
+          </form>
+
+          <hr />
+
+          <!-- Список заметок -->
+          <ul class="list-group">
+            <li
+              v-for="(note, index) in sortedNotes"
+              :key="index"
+              class="list-group-item"
+            >
+              <h4 class="mb-1">
+                {{ note.title }}
+                <span v-if="note.isImportant" class="badge bg-danger"
+                  >Важная</span
+                >
+              </h4>
+              <p class="mb-1">{{ note.description }}</p>
+              <small>
+                Приоритет: {{ orderNames[note.priority] }}
+                <br />
+                Дата создания: {{ formatDateTime(note.createdAt) }}
+                <br />
+                Статус: {{ note.status }}
+              </small>
+              <button
+                @click="removeNote(index)"
+                class="btn btn-sm btn-danger float-end"
+              >
+                🗑️
+              </button>
+            </li>
+          </ul>
+
+          <!-- Кнопка сброса данных в localStorage -->
+          <button @click="resetData" class="btn btn-warning mt-3">
+            Сбросить данные
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="./scripts/notes.vue"></script>
+  </body>
+</html>
